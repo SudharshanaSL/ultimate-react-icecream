@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { getMenu } from '../data/iceCreamData';
 import { Helmet } from 'react-helmet';
 import IceCreamImage from './IceCreamImage';
+import LoaderMessage from '../structure/LoaderMessage';
 
 const Menu = () => {
   const [menu, setMenu] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     getMenu().then(menuData => {
       if (isMounted) {
         setMenu(menuData);
+        setIsLoading(false);
       }
     });
 
@@ -27,7 +30,13 @@ const Menu = () => {
         </title>
       </Helmet>
       <h2 className="main-heading">Rock your taste buds with one of these!</h2>
-      {menu.length ? (
+      {isLoading ? (
+        <LoaderMessage
+          loadingMessage="Loading menu"
+          doneMessage="Loading menu complete"
+          isLoading={isLoading}
+        />
+      ) : menu.length ? (
         <ul className="container">
           {menu.map(
             ({ id, iceCream, price, description, inStock, quantity }) => (
@@ -52,7 +61,7 @@ const Menu = () => {
           )}
         </ul>
       ) : (
-        <p>Your menu is empty! The sadness!</p>
+        !isLoading && <p>Your menu is empty! The sadness!</p>
       )}
     </main>
   );

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-const LoaderMessage = ({ loadingMsg, doneMsg, isLoading }) => {
+const LoaderMessage = ({ loadingMessage, doneMessage, isLoading }) => {
   const isLoadingPreviousValue = useRef(null);
+
   const [showLoadingMessage, setShowLoadingMessage] = useState(false);
   const [showDoneMessage, setShowDoneMessage] = useState(false);
 
@@ -15,6 +16,11 @@ const LoaderMessage = ({ loadingMsg, doneMsg, isLoading }) => {
         setShowLoadingMessage(true);
       }, 400);
     } else {
+      /**
+       * if isLoading is not yet defined, code can hit this flow
+       * Hence use the isLoadingPreviousValue reference 
+       * and show done message only if isLoading was set
+       */
       if (isLoadingPreviousValue.current) {
         setShowDoneMessage(true);
         doneMessageDelay = setTimeout(() => {
@@ -22,27 +28,28 @@ const LoaderMessage = ({ loadingMsg, doneMsg, isLoading }) => {
         }, 300);
       }
     }
+
     isLoadingPreviousValue.current = isLoading;
     return () => {
-      setShowLoadingMessage(false);
-      setShowDoneMessage(false);
       clearTimeout(loadingMessageDelay);
+      setShowLoadingMessage(false);
       clearTimeout(doneMessageDelay);
+      setShowDoneMessage(false);
     };
   }, [isLoading]);
 
   return (
-    <div aria-live="assertive" aria-atomic="true">
-      {showLoadingMessage && <p className="loading">{loadingMsg}</p>}
-      {showDoneMessage && <p className="visually-hidden">{doneMsg}</p>}
+    <div aria-atomic="true" aria-live="assertive">
+      {showLoadingMessage && <p className="loading">{loadingMessage}</p>}
+      {showDoneMessage && <p className="visually-hidden">{doneMessage}</p>}
     </div>
   );
 };
 
 LoaderMessage.propTypes = {
-  loadingMsg: PropTypes.string.isRequired,
-  doneMsg: PropTypes.string.isRequired,
+  loadingMessage: PropTypes.string.isRequired,
   isLoading: PropTypes.bool,
+  doneMessage: PropTypes.string.isRequired,
 };
 
 export default LoaderMessage;
