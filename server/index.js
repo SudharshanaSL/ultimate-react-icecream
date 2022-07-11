@@ -124,7 +124,7 @@ app.get('/api/menu', (req, res) => {
 });
 
 app.post('/api/menu', (req, res) => {
-  const {  iceCream, ...rest } = req.body;
+  const { iceCream, ...rest } = req.body;
   const newMenuItem = {
     id: menuData.reduce((prev, cur) => (cur.id > prev ? cur.id : prev), 0) + 1,
     iceCream: {
@@ -143,7 +143,7 @@ app.get('/api/menu/:id', (req, res) => {
     10
   );
   if (menuItem) {
-    res.send(menuItem);
+    setTimeout(() => res.send(menuItem), 500);
   } else {
     res.status(404);
     res.send('Menu item does not exist');

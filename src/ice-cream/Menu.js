@@ -66,7 +66,7 @@ const Menu = ({ history }) => {
                 <section
                   className="card"
                   onClick={() => {
-                    onItemClickHandler(`/menu-items/:${id.toString()}`);
+                    onItemClickHandler(`/menu-items/${id.toString()}`);
                   }}
                 >
                   <div className="image-container">
@@ -75,7 +75,7 @@ const Menu = ({ history }) => {
                   <div className="text-container">
                     <h3>
                       <Link
-                        to={`/menu-items/:${id.toString()}`}
+                        to={`/menu-items/${id.toString()}`}
                         onClick={onLinkClickHandler}
                       >
                         {iceCream.name}
