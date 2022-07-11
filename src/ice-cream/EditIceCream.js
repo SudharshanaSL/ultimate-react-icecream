@@ -6,6 +6,7 @@ import LoaderMessage from '../structure/LoaderMessage';
 import '../styles/forms-spacer.scss';
 import IceCreamImage from './IceCreamImage';
 import useUniqueIds from '../hooks/useUniqueIds';
+import Main from '../structure/Main';
 
 const EditIceCream = ({ history, match }) => {
   /**
@@ -55,7 +56,9 @@ const EditIceCream = ({ history, match }) => {
           /**
            * Route to home page by replacing current history state
            */
-          history.replace('/');
+          history.replace('/', {
+            focus: true,
+          });
         }
       });
   }, [match.params.menuItemId, history]);
@@ -90,16 +93,14 @@ const EditIceCream = ({ history, match }) => {
       description,
     };
     putMenuItem(submitItem).then(() => {
-      history.push('/');
+      history.push('/', {
+        focus: true,
+      });
     });
   };
 
   return (
-    <main>
-      <Helmet>
-        <title>Update this beauty | Ultimate Ice Cream App</title>
-      </Helmet>
-      <h2 className="main-heading">Update this beauty</h2>
+    <Main headingText="Update this beauty">
       <LoaderMessage
         loadingMessage="Loading ice cream"
         doneMessage="Ice cream loaded"
@@ -167,7 +168,7 @@ const EditIceCream = ({ history, match }) => {
           </div>
         </div>
       )}
-    </main>
+    </Main>
   );
 };
 
