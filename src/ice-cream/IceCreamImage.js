@@ -14,6 +14,10 @@ const IceCreamImage = ({ iceCreamId }) => {
   );
 };
 
+/**
+ * If id is not set, an error will be thrown in console
+ * If id is not passed as a number, but a string for example, a warning will be thrown 
+ */
 IceCreamImage.propTypes = {
   iceCreamId: PropTypes.number.isRequired,
 };
