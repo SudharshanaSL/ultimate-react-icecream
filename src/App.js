@@ -1,11 +1,14 @@
 import React from 'react';
 import './styles/ice-cream.scss';
+import Footer from './structure/Footer';
+import Header from './structure/Header';
 
 const App = () => {
   return (
-    <header>
-      <h1>Your app goes here</h1>
-    </header>
+    <>
+      <Header />
+      <Footer />
+    </>
   );
 };
 
