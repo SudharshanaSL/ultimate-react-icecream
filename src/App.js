@@ -7,11 +7,11 @@ import './styles/ice-cream.scss';
 
 const App = () => {
   return (
-    <Router>
+    <>
       <Header />
-      <Route path="/" component={Menu} exact />
+      <Menu />
       <Footer />
-    </Router>
+    </>
   );
 };
 
