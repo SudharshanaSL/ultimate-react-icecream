@@ -19,7 +19,7 @@ const IceCreamImage = ({ iceCreamId }) => {
  * If id is not passed as a number, but a string for example, a warning will be thrown 
  */
 IceCreamImage.propTypes = {
-  iceCreamId: PropTypes.number.isRequired,
+  iceCreamId: PropTypes.number,
 };
 
 export default IceCreamImage;
