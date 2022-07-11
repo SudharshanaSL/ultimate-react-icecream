@@ -3,8 +3,10 @@ import { getMenu } from '../data/iceCreamData';
 import { Helmet } from 'react-helmet';
 import IceCreamImage from './IceCreamImage';
 import LoaderMessage from '../structure/LoaderMessage';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Menu = () => {
+const Menu = ({ history }) => {
   const [menu, setMenu] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,6 +23,26 @@ const Menu = () => {
       isMounted = false;
     };
   }, []);
+
+  const onItemClickHandler = to => {
+    /**
+     * If the user clicks on Link (ice cream name),
+     * Link component will push state to history
+     * When the event bubbles up to the section tag,
+     * history gets pushed again.
+     *
+     * We cannot remove the Link component
+     * as screen readers and keyboard navigation users
+     * require it to be present.
+     *
+     * Solution is to stop propagation in on clicking the Link component
+     */
+    history.push(to);
+  };
+
+  const onLinkClickHandler = e => {
+    e.stopPropagation();
+  };
 
   return (
     <main>
@@ -41,12 +63,24 @@ const Menu = () => {
           {menu.map(
             ({ id, iceCream, price, description, inStock, quantity }) => (
               <li key={id.toString()}>
-                <section className="card">
+                <section
+                  className="card"
+                  onClick={() => {
+                    onItemClickHandler(`/menu-items/:${id.toString()}`);
+                  }}
+                >
                   <div className="image-container">
                     <IceCreamImage iceCreamId={iceCream.id} />
                   </div>
                   <div className="text-container">
-                    <h3>{iceCream.name}</h3>
+                    <h3>
+                      <Link
+                        to={`/menu-items/:${id.toString()}`}
+                        onClick={onLinkClickHandler}
+                      >
+                        {iceCream.name}
+                      </Link>
+                    </h3>
                     <div className="content card-content">
                       <p className="price">{`$${price.toFixed(2)}`}</p>
                       <p className={`stock${inStock ? '' : ' out'}`}>
@@ -65,6 +99,12 @@ const Menu = () => {
       )}
     </main>
   );
+};
+
+Menu.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
 };
 
 export default Menu;
