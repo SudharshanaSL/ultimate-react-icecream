@@ -28,18 +28,39 @@ const EditIceCream = ({ history, match }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [descriptionId, quantityId, priceId, inStockId] = useUniqueIds(4);
+  const [
+    descriptionId,
+    descriptionErrorId,
+    quantityId,
+    quantityErrorId,
+    priceId,
+    priceErrorId,
+    inStockId,
+  ] = useUniqueIds(7);
 
-  const descriptionError = useValidation(
+  const [descriptionError, descriptionErrorProps] = useValidation(
     menuItem.description,
-    validateDescription
+    descriptionErrorId,
+    hasSubmitted,
+    validateDescription,
+    true
   );
-  const quantityError = useValidation(
+  const [quantityError, quantityErrorProps] = useValidation(
     menuItem.quantity,
+    quantityErrorId,
+    hasSubmitted,
     validateQuantity,
+    false,
     menuItem.inStock
   );
-  const priceError = useValidation(menuItem.price, validatePrice);
+  const [priceError, priceErrorProps] = useValidation(
+    menuItem.price,
+    priceErrorId,
+    hasSubmitted,
+    validatePrice,
+    true
+  );
+  const formRef = useRef(null);
 
   /**
    * to avoid memory leak while setting menu item after api response
@@ -99,7 +120,14 @@ const EditIceCream = ({ history, match }) => {
   const onSubmitHandler = e => {
     e.preventDefault();
     setHasSubmitted(true);
-    if (!descriptionError && !quantityError && !priceError) {
+    if (descriptionError || quantityError || priceError) {
+      setTimeout(() => {
+        const errorControl = formRef.current.querySelector(
+          '[aria-invalid="true"]'
+        );
+        errorControl.focus();
+      });
+    } else {
       const { id, price, inStock, quantity, description, iceCream } = menuItem;
       const submitItem = {
         iceCream: {
@@ -136,13 +164,14 @@ const EditIceCream = ({ history, match }) => {
               <dt>Name :</dt>
               <dd>{menuItem.iceCream.name}</dd>
             </dl>
-            <form onSubmit={onSubmitHandler}>
+            <form onSubmit={onSubmitHandler} noValidate ref={formRef}>
               <label htmlFor={descriptionId}>
                 Description<span aria-hidden="true">*</span>
               </label>
               <ErrorContainer
                 errorText={descriptionError}
                 hasSubmitted={hasSubmitted}
+                errorId={descriptionErrorId}
               >
                 <textarea
                   id={descriptionId}
@@ -150,6 +179,7 @@ const EditIceCream = ({ history, match }) => {
                   rows="3"
                   value={menuItem.description}
                   onChange={onChangeHandler}
+                  {...descriptionErrorProps}
                 />
               </ErrorContainer>
               <label htmlFor={inStockId}>In Stock:</label>
@@ -167,12 +197,14 @@ const EditIceCream = ({ history, match }) => {
               <ErrorContainer
                 errorText={quantityError}
                 hasSubmitted={hasSubmitted}
+                errorId={quantityErrorId}
               >
                 <select
                   id={quantityId}
                   name="quantity"
                   onChange={onChangeHandler}
                   value={menuItem.quantity}
+                  {...quantityErrorProps}
                 >
                   <option value="0">0</option>
                   <option value="10">10</option>
@@ -188,6 +220,7 @@ const EditIceCream = ({ history, match }) => {
               <ErrorContainer
                 errorText={priceError}
                 hasSubmitted={hasSubmitted}
+                errorId={priceErrorId}
               >
                 <input
                   id={priceId}
@@ -196,6 +229,7 @@ const EditIceCream = ({ history, match }) => {
                   step="0.01"
                   value={menuItem.price}
                   onChange={onChangeHandler}
+                  {...priceErrorProps}
                 />
               </ErrorContainer>
               <div className="button-container">
