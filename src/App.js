@@ -16,7 +16,7 @@ import './styles/ice-cream.scss';
 const App = () => {
   return (
     <Router>
-      <a class="skip-link" href="#main">
+      <a className="skip-link" href="#main">
         Skip to content
       </a>
       <Header />
