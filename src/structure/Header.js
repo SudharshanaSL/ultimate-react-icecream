@@ -16,6 +16,13 @@ const Header = () => (
       >
         Menu
       </FocusLink>
+      <FocusLink
+        to={{ pathname: '/ice-creams', state: { focus: true } }}
+        activeClassName="active"
+        exact
+      >
+        Add Ice Cream
+      </FocusLink>
     </nav>
   </header>
 );
